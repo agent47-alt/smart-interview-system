@@ -16,92 +16,170 @@ function Register() {
     e.preventDefault();
     setLoading(true);
     setError('');
-
     try {
       await registerUser(formData);
-      alert('Account created successfully! Please login.');
+      alert('Account created! Please login.');
       navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Try again.');
+      setError(err.response?.data?.detail || 'Registration failed.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Create Account</h2>
-        <p style={styles.subtitle}>Join Smart Interview System</p>
+    <div style={styles.page}>
+      <div style={styles.leftPanel}>
+        <div style={styles.brandBox}>
+          <div style={styles.logo}>🎯</div>
+          <h1 style={styles.brandName}>InterviewAI</h1>
+          <p style={styles.brandTagline}>
+            Your personal AI interview coach. Practice anytime, anywhere.
+          </p>
+        </div>
+        <div style={styles.statsRow}>
+          {[
+            { number: '18+', label: 'Questions' },
+            { number: '3', label: 'Categories' },
+            { number: 'AI', label: 'Powered' },
+          ].map((s, i) => (
+            <div key={i} style={styles.statBox}>
+              <div style={styles.statNum}>{s.number}</div>
+              <div style={styles.statLbl}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-        {error && <p style={styles.error}>{error}</p>}
+      <div style={styles.rightPanel}>
+        <div style={styles.formCard} className="animate-fade">
+          <h2 style={styles.formTitle}>Create account</h2>
+          <p style={styles.formSubtitle}>Start practicing for free today</p>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            style={styles.input}
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            style={styles.input}
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            style={styles.input}
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <button style={styles.button} type="submit" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Register'}
-          </button>
-        </form>
+          {error && <div style={styles.errorBox}>{error}</div>}
 
-        <p style={styles.link}>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+          <form onSubmit={handleSubmit}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Full Name</label>
+              <input
+                style={styles.input}
+                type="text"
+                name="name"
+                placeholder="Athul Krishna"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Email</label>
+              <input
+                style={styles.input}
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>Password</label>
+              <input
+                style={styles.input}
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button
+              style={{ ...styles.button, opacity: loading ? 0.7 : 1 }}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? 'Creating account...' : 'Create Account →'}
+            </button>
+          </form>
+
+          <p style={styles.switchText}>
+            Already have an account?{' '}
+            <Link to="/login" style={styles.link}>Login here</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
 const styles = {
-  container: {
-    display: 'flex', justifyContent: 'center',
-    alignItems: 'center', height: '100vh',
-    backgroundColor: '#f0f2f5'
+  page: { display: 'flex', minHeight: '100vh' },
+  leftPanel: {
+    flex: 1, backgroundColor: '#1a1a2e',
+    display: 'flex', flexDirection: 'column',
+    justifyContent: 'center', padding: '60px', color: 'white'
   },
-  card: {
-    backgroundColor: 'white', padding: '40px',
-    borderRadius: '12px', width: '380px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+  brandBox: { marginBottom: '50px' },
+  logo: { fontSize: '48px', marginBottom: '15px' },
+  brandName: {
+    fontSize: '36px', fontWeight: '700',
+    marginBottom: '10px', letterSpacing: '-0.5px'
   },
-  title: { textAlign: 'center', color: '#1a1a2e', marginBottom: '5px' },
-  subtitle: { textAlign: 'center', color: '#888', marginBottom: '25px' },
+  brandTagline: {
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: '16px', lineHeight: '1.6'
+  },
+  statsRow: { display: 'flex', gap: '20px' },
+  statBox: {
+    flex: 1, backgroundColor: 'rgba(255,255,255,0.07)',
+    borderRadius: '10px', padding: '20px', textAlign: 'center'
+  },
+  statNum: { fontSize: '28px', fontWeight: '700', color: '#6366f1' },
+  statLbl: { fontSize: '13px', color: 'rgba(255,255,255,0.6)', marginTop: '4px' },
+  rightPanel: {
+    flex: 1, display: 'flex', alignItems: 'center',
+    justifyContent: 'center', backgroundColor: '#f5f6fa', padding: '40px'
+  },
+  formCard: {
+    backgroundColor: 'white', padding: '50px',
+    borderRadius: '16px', width: '100%', maxWidth: '420px',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.08)'
+  },
+  formTitle: {
+    fontSize: '26px', fontWeight: '700',
+    color: '#1a1a2e', marginBottom: '6px'
+  },
+  formSubtitle: { color: '#888', fontSize: '14px', marginBottom: '30px' },
+  inputGroup: { marginBottom: '18px' },
+  label: {
+    display: 'block', fontSize: '13px',
+    fontWeight: '600', color: '#444', marginBottom: '7px'
+  },
   input: {
-    width: '100%', padding: '12px', marginBottom: '15px',
-    borderRadius: '8px', border: '1px solid #ddd',
-    fontSize: '14px', boxSizing: 'border-box'
+    width: '100%', padding: '12px 14px',
+    border: '1.5px solid #e5e7eb', borderRadius: '8px',
+    fontSize: '14px', outline: 'none', boxSizing: 'border-box'
   },
   button: {
-    width: '100%', padding: '12px', backgroundColor: '#4f46e5',
-    color: 'white', border: 'none', borderRadius: '8px',
-    fontSize: '16px', cursor: 'pointer', marginTop: '5px'
+    width: '100%', padding: '13px',
+    backgroundColor: '#1a1a2e', color: 'white',
+    border: 'none', borderRadius: '8px',
+    fontSize: '15px', fontWeight: '600',
+    cursor: 'pointer', marginTop: '8px'
   },
-  error: { color: 'red', textAlign: 'center', marginBottom: '10px' },
-  link: { textAlign: 'center', marginTop: '20px', fontSize: '14px' }
+  errorBox: {
+    backgroundColor: '#fef2f2', color: '#ef4444',
+    padding: '12px', borderRadius: '8px',
+    fontSize: '13px', marginBottom: '18px',
+    border: '1px solid #fecaca'
+  },
+  switchText: {
+    textAlign: 'center', marginTop: '22px',
+    fontSize: '14px', color: '#888'
+  },
+  link: { color: '#6366f1', fontWeight: '600', textDecoration: 'none' }
 };
 
 export default Register;

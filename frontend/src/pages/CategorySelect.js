@@ -30,16 +30,20 @@ function CategorySelect() {
   };
 
   const categoryColors = {
-    Python: '#3b82f6',
-    SQL: '#10b981',
-    HR: '#f59e0b',
-  };
+  Python: '#3b82f6',
+  SQL: '#10b981',
+  HR: '#f59e0b',
+  'Data Structures': '#8b5cf6',
+  'System Design': '#ef4444',
+};
 
-  const categoryIcons = {
-    Python: '🐍',
-    SQL: '🗄️',
-    HR: '🤝',
-  };
+const categoryIcons = {
+  Python: '🐍',
+  SQL: '🗄️',
+  HR: '🤝',
+  'Data Structures': '🌳',
+  'System Design': '⚙️',
+};
 
   return (
     <div style={styles.container}>
