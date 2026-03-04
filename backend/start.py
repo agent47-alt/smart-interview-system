@@ -1,7 +1,9 @@
-import subprocess
 import sys
+import os
 
-# Run database seeding if needed
+# Add backend directory to Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from database import SessionLocal, engine
 import models
 
