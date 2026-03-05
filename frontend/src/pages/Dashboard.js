@@ -41,11 +41,6 @@ function Dashboard() {
       });
   }, [userId]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
-
   const getScoreColor = (score) => {
     if (score >= 8) return '#10b981';
     if (score >= 6) return '#f59e0b';
@@ -88,14 +83,11 @@ function Dashboard() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.headerTitle}>🎯 InterviewAI</h2>
-        <div style={styles.headerRight}>
-          <span style={styles.welcomeText}>👋 {userName}</span>
-          <button style={styles.logoutBtn} onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
+
+      {/* Page Header */}
+      <div style={styles.pageHeader}>
+        <h2 style={styles.pageTitle}>Dashboard</h2>
+        <p style={styles.pageSubtitle}>👋 Welcome back, {userName}!</p>
       </div>
 
       <div style={styles.content}>
@@ -244,20 +236,22 @@ function Dashboard() {
 
 const styles = {
   container: { minHeight: '100vh', backgroundColor: '#f0f2f5' },
-  header: {
-    backgroundColor: 'white', padding: '15px 30px',
-    display: 'flex', justifyContent: 'space-between',
-    alignItems: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.08)'
+  pageHeader: {
+    padding: '30px 30px 0 30px',
+    marginBottom: '10px'
   },
-  headerTitle: { margin: 0, color: '#1a1a2e', fontSize: '20px' },
-  headerRight: { display: 'flex', alignItems: 'center', gap: '15px' },
-  welcomeText: { color: '#555', fontSize: '14px' },
-  logoutBtn: {
-    padding: '8px 16px', backgroundColor: '#ef4444',
-    color: 'white', border: 'none', borderRadius: '6px',
-    cursor: 'pointer', fontSize: '13px'
+  pageTitle: {
+    margin: '0 0 5px 0',
+    fontSize: '26px',
+    fontWeight: '700',
+    color: '#1a1a2e'
   },
-  content: { maxWidth: '1000px', margin: '30px auto', padding: '0 20px' },
+  pageSubtitle: {
+    margin: 0,
+    color: '#888',
+    fontSize: '15px'
+  },
+  content: { maxWidth: '1000px', margin: '20px auto', padding: '0 20px' },
   startCard: {
     backgroundColor: '#4f46e5', borderRadius: '12px',
     padding: '25px 30px', display: 'flex',
