@@ -18,6 +18,8 @@ export const loginUser = (data) => API.post('/auth/login', data);
 export const getCategories = () => API.get('/questions/categories');
 export const getQuestionsByCategory = (category, difficulty) =>
   API.get(`/questions/${category}?difficulty=${difficulty || 'all'}`);
+export const getMockQuestions = (count) =>
+  API.get(`/questions/mock/random?count=${count || 10}`);
 export const submitAnswer = (data) => API.post('/interview/submit', data);
 export const getUserResults = (userId) => API.get(`/interview/results/${userId}`);
 

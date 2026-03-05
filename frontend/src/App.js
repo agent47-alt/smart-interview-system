@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import CategorySelect from './pages/CategorySelect';
 import Interview from './pages/Interview';
 import Results from './pages/Results';
+import MockInterview from './pages/MockInterview';
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -21,7 +22,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/categories" element={<PrivateRoute><CategorySelect /></PrivateRoute>} />
-        <Route path="/interview/:category" element={<PrivateRoute><Interview /></PrivateRoute>} />
+        <Route path="/interview/:category/:difficulty" element={<PrivateRoute><Interview /></PrivateRoute>} />
+        <Route path="/mock" element={<PrivateRoute><MockInterview /></PrivateRoute>} />
         <Route path="/results" element={<PrivateRoute><Results /></PrivateRoute>} />
       </Routes>
     </Router>

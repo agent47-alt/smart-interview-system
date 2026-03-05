@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from database import get_db
 import models
 
@@ -12,6 +13,24 @@ def get_categories(db: Session = Depends(get_db)):
     return {"categories": [c[0] for c in categories]}
 
 
+@router.get("/mock/random")
+def get_mock_questions(count: int = 10, db: Session = Depends(get_db)):
+    # Get random questions from all categories
+    questions = db.query(models.Question).order_by(func.random()).limit(count).all()
+    return {
+        "total": len(questions),
+        "questions": [
+            {
+                "id": q.id,
+                "question_text": q.question_text,
+                "category": q.category,
+                "difficulty": q.difficulty
+            }
+            for q in questions
+        ]
+    }
+
+
 @router.get("/{category}")
 def get_questions_by_category(
     category: str,
@@ -21,13 +40,10 @@ def get_questions_by_category(
     query = db.query(models.Question).filter(
         models.Question.category == category
     )
-
-    # Filter by difficulty if provided
     if difficulty and difficulty != "all":
         query = query.filter(models.Question.difficulty == difficulty)
 
     questions = query.all()
-
     return {
         "category": category,
         "difficulty": difficulty or "all",
@@ -48,10 +64,8 @@ def get_question(question_id: int, db: Session = Depends(get_db)):
     question = db.query(models.Question).filter(
         models.Question.id == question_id
     ).first()
-
     if not question:
         return {"error": "Question not found"}
-
     return {
         "id": question.id,
         "question_text": question.question_text,
