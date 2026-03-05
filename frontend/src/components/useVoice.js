@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const useVoice = (onResult) => {
   const [isListening, setIsListening] = useState(false);
   const [supported, setSupported] = useState(false);
-  const [recognition, setRecognition] = useState(null);
+  const recognitionRef = useRef(null);
+  const onResultRef = useRef(onResult);
+
+  // Keep ref updated without triggering useEffect
+  useEffect(() => {
+    onResultRef.current = onResult;
+  }, [onResult]);
 
   useEffect(() => {
-    // Check if browser supports speech recognition
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -18,12 +23,11 @@ const useVoice = (onResult) => {
 
       rec.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        onResult(transcript);
+        onResultRef.current(transcript);
         setIsListening(false);
       };
 
-      rec.onerror = (event) => {
-        console.error('Speech error:', event.error);
+      rec.onerror = () => {
         setIsListening(false);
       };
 
@@ -31,21 +35,21 @@ const useVoice = (onResult) => {
         setIsListening(false);
       };
 
-      setRecognition(rec);
+      recognitionRef.current = rec;
       setSupported(true);
     }
   }, []);
 
   const startListening = () => {
-    if (recognition) {
-      recognition.start();
+    if (recognitionRef.current) {
+      recognitionRef.current.start();
       setIsListening(true);
     }
   };
 
   const stopListening = () => {
-    if (recognition) {
-      recognition.stop();
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
       setIsListening(false);
     }
   };
