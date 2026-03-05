@@ -6,31 +6,43 @@ import models
 router = APIRouter(prefix="/questions", tags=["Questions"])
 
 
-# Get all categories available
 @router.get("/categories")
 def get_categories(db: Session = Depends(get_db)):
     categories = db.query(models.Question.category).distinct().all()
     return {"categories": [c[0] for c in categories]}
 
 
-# Get questions by category
 @router.get("/{category}")
-def get_questions_by_category(category: str, db: Session = Depends(get_db)):
-    questions = db.query(models.Question).filter(
+def get_questions_by_category(
+    category: str,
+    difficulty: str = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(models.Question).filter(
         models.Question.category == category
-    ).all()
+    )
 
-    return {"category": category, "total": len(questions), "questions": [
-        {
-            "id": q.id,
-            "question_text": q.question_text,
-            "difficulty": q.difficulty
-        }
-        for q in questions
-    ]}
+    # Filter by difficulty if provided
+    if difficulty and difficulty != "all":
+        query = query.filter(models.Question.difficulty == difficulty)
+
+    questions = query.all()
+
+    return {
+        "category": category,
+        "difficulty": difficulty or "all",
+        "total": len(questions),
+        "questions": [
+            {
+                "id": q.id,
+                "question_text": q.question_text,
+                "difficulty": q.difficulty
+            }
+            for q in questions
+        ]
+    }
 
 
-# Get single question by ID
 @router.get("/single/{question_id}")
 def get_question(question_id: int, db: Session = Depends(get_db)):
     question = db.query(models.Question).filter(

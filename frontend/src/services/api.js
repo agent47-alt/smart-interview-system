@@ -16,7 +16,8 @@ API.interceptors.request.use((config) => {
 export const registerUser = (data) => API.post('/auth/register', data);
 export const loginUser = (data) => API.post('/auth/login', data);
 export const getCategories = () => API.get('/questions/categories');
-export const getQuestionsByCategory = (category) => API.get(`/questions/${category}`);
+export const getQuestionsByCategory = (category, difficulty) =>
+  API.get(`/questions/${category}?difficulty=${difficulty || 'all'}`);
 export const submitAnswer = (data) => API.post('/interview/submit', data);
 export const getUserResults = (userId) => API.get(`/interview/results/${userId}`);
 
