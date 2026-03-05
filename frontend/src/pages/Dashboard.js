@@ -119,6 +119,18 @@ function Dashboard() {
             >
               🎯 Mock Full Interview
             </button>
+            <button
+              style={styles.dailyBtn}
+              onClick={() => navigate('/daily')}
+            >
+              🌟 Daily Challenge
+            </button>
+            <button
+              style={styles.leaderboardBtn}
+              onClick={() => navigate('/leaderboard')}
+            >
+              🏆 Leaderboard
+            </button>
           </div>
         </div>
 
@@ -255,19 +267,31 @@ const styles = {
   startTitle: { margin: '0 0 5px 0', fontSize: '20px' },
   startSubtitle: { margin: 0, opacity: 0.8, fontSize: '14px' },
   btnRow: {
-    display: 'flex', gap: '15px',
+    display: 'flex', gap: '10px',
     justifyContent: 'center', flexWrap: 'wrap'
   },
   startBtn: {
-    padding: '12px 25px', backgroundColor: 'white',
+    padding: '10px 18px', backgroundColor: 'white',
     color: '#4f46e5', border: 'none', borderRadius: '8px',
-    cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
+    cursor: 'pointer', fontSize: '14px', fontWeight: 'bold',
     whiteSpace: 'nowrap'
   },
   mockBtn: {
-    padding: '12px 25px', backgroundColor: '#1a1a2e',
+    padding: '10px 18px', backgroundColor: '#1a1a2e',
     color: 'white', border: 'none', borderRadius: '8px',
-    cursor: 'pointer', fontSize: '15px', fontWeight: '600',
+    cursor: 'pointer', fontSize: '14px', fontWeight: '600',
+    whiteSpace: 'nowrap'
+  },
+  dailyBtn: {
+    padding: '10px 18px', backgroundColor: '#f59e0b',
+    color: 'white', border: 'none', borderRadius: '8px',
+    cursor: 'pointer', fontSize: '14px', fontWeight: '600',
+    whiteSpace: 'nowrap'
+  },
+  leaderboardBtn: {
+    padding: '10px 18px', backgroundColor: '#8b5cf6',
+    color: 'white', border: 'none', borderRadius: '8px',
+    cursor: 'pointer', fontSize: '14px', fontWeight: '600',
     whiteSpace: 'nowrap'
   },
   emptyCard: {

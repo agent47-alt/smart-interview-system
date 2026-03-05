@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from database import get_db
+from datetime import date
 import models
 
 router = APIRouter(prefix="/questions", tags=["Questions"])
@@ -13,9 +14,33 @@ def get_categories(db: Session = Depends(get_db)):
     return {"categories": [c[0] for c in categories]}
 
 
+@router.get("/daily")
+def get_daily_challenge(db: Session = Depends(get_db)):
+    # Use today's date as seed to get same question all day
+    today = date.today()
+    seed = today.year * 10000 + today.month * 100 + today.day
+
+    # Get all questions
+    all_questions = db.query(models.Question).all()
+
+    if not all_questions:
+        return {"error": "No questions found"}
+
+    # Pick question based on date seed
+    index = seed % len(all_questions)
+    question = all_questions[index]
+
+    return {
+        "id": question.id,
+        "question_text": question.question_text,
+        "category": question.category,
+        "difficulty": question.difficulty,
+        "date": str(today)
+    }
+
+
 @router.get("/mock/random")
 def get_mock_questions(count: int = 10, db: Session = Depends(get_db)):
-    # Get random questions from all categories
     questions = db.query(models.Question).order_by(func.random()).limit(count).all()
     return {
         "total": len(questions),

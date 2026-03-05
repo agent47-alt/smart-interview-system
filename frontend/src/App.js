@@ -7,6 +7,7 @@ import CategorySelect from './pages/CategorySelect';
 import Interview from './pages/Interview';
 import Results from './pages/Results';
 import MockInterview from './pages/MockInterview';
+import DailyChallenge from './pages/DailyChallenge';
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -24,6 +25,7 @@ function App() {
         <Route path="/categories" element={<PrivateRoute><CategorySelect /></PrivateRoute>} />
         <Route path="/interview/:category/:difficulty" element={<PrivateRoute><Interview /></PrivateRoute>} />
         <Route path="/mock" element={<PrivateRoute><MockInterview /></PrivateRoute>} />
+        <Route path="/daily" element={<PrivateRoute><DailyChallenge /></PrivateRoute>} />
         <Route path="/results" element={<PrivateRoute><Results /></PrivateRoute>} />
       </Routes>
     </Router>

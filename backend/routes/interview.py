@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from pydantic import BaseModel
 from database import get_db
 from ai.analyzer import calculate_score
@@ -47,7 +48,6 @@ def submit_answer(data: AnswerSubmit, db: Session = Depends(get_db)):
 
 @router.get("/results/{user_id}")
 def get_user_results(user_id: int, db: Session = Depends(get_db)):
-
     results = db.query(models.Result, models.Question).join(
         models.Question, models.Result.question_id == models.Question.id
     ).filter(
@@ -68,11 +68,9 @@ def get_user_results(user_id: int, db: Session = Depends(get_db)):
             "date": result.created_at.strftime("%Y-%m-%d %H:%M")
         })
 
-    # Calculate stats
     scores = [r["score"] for r in formatted]
     avg_score = round(sum(scores) / len(scores), 1)
 
-    # Category breakdown
     category_scores = {}
     for r in formatted:
         cat = r["category"]
@@ -81,11 +79,10 @@ def get_user_results(user_id: int, db: Session = Depends(get_db)):
         category_scores[cat].append(r["score"])
 
     category_avg = {
-        cat: round(sum(scores) / len(scores), 1)
-        for cat, scores in category_scores.items()
+        cat: round(sum(s) / len(s), 1)
+        for cat, s in category_scores.items()
     }
 
-    # Find weak area
     weak_area = min(category_avg, key=category_avg.get) if category_avg else None
 
     return {
@@ -99,3 +96,41 @@ def get_user_results(user_id: int, db: Session = Depends(get_db)):
             "lowest_score": min(scores)
         }
     }
+
+
+@router.get("/leaderboard")
+def get_leaderboard(db: Session = Depends(get_db)):
+    # Get all users
+    users = db.query(models.User).all()
+
+    leaderboard = []
+
+    for user in users:
+        results = db.query(models.Result).filter(
+            models.Result.user_id == user.id
+        ).all()
+
+        if not results:
+            continue
+
+        scores = [r.score for r in results]
+        avg_score = round(sum(scores) / len(scores), 1)
+        total = len(scores)
+        best = max(scores)
+
+        leaderboard.append({
+            "user_id": user.id,
+            "name": user.name,
+            "average_score": avg_score,
+            "total_answered": total,
+            "best_score": best
+        })
+
+    # Sort by average score descending
+    leaderboard.sort(key=lambda x: x["average_score"], reverse=True)
+
+    # Add rank
+    for i, entry in enumerate(leaderboard):
+        entry["rank"] = i + 1
+
+    return {"leaderboard": leaderboard}
